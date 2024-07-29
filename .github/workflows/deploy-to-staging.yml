@@ -1,0 +1,62 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.STAGING_SSH_KEY }}" | base64 --decode > staging_ssh_key.pem
+          chmod 600 staging_ssh_key.pem
+          ssh-keyscan -H 52.44.21.137 >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Deploy to Staging
+        run: |
+          ssh -i staging_ssh_key.pem ubuntu@52.44.21.137 "export ACCESS_TOKEN=${{ secrets.REPO_ACCESS_TOKEN }}; bash -s" << 'EOF'
+          cd /home/ubuntu/SPN_Project/spn-backend/staging
+
+          # Setup GIT_ASKPASS script for secure PAT usage
+          export GITHUB_PAT=$ACCESS_TOKEN
+          echo 'echo $GITHUB_PAT' > git-askpass-helper.sh
+          chmod +x git-askpass-helper.sh
+          export GIT_ASKPASS=$(pwd)/git-askpass-helper.sh
+
+          # Ensure Git uses HTTPS instead of SSH
+          git remote set-url origin https://github.com/rapidzzrepo/spn-backend.git
+
+          # Debug: Show the remote URL
+          git remote -v
+
+          # Now, git operations should authenticate using the PAT provided via GIT_ASKPASS
+          git pull origin main
+
+          # Try to load NVM
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+          # Use NVM to switch to the required Node.js version
+          nvm install 20.11.0
+          nvm use 20.11.0
+
+          # Apply patches
+          # npx patch-package
+
+          # Update pm2
+          pm2 restart "spn-staging"
+
+          # Clean up
+          rm git-askpass-helper.sh
+          unset GIT_ASKPASS
+          unset GITHUB_PAT
+          EOF
