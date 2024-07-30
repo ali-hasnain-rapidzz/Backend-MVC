@@ -1,41 +1,22 @@
-// Import the necessary lodash functions
-import CryptoJS from 'crypto-js';
+import bcrypt from 'bcrypt';
 
 class EncryptLibraryClass {
-  private saltLength;
-  private iterations;
+  private saltRounds: number;
 
   constructor() {
-    this.saltLength = 16; // Length of the salt used in PBKDF2
-    this.iterations = 10; // Number of iterations in PBKDF2
+    this.saltRounds = 10; // Number of salt rounds for bcrypt
   }
   
-  encryptPassword = (password: string): string => {
-    // Generate a random salt
-    const salt = CryptoJS.lib.WordArray.random(this.saltLength);
-  
-    // Hash the password with the salt and iterations
-    const hash = CryptoJS.PBKDF2(password, salt, {
-      keySize: 512 / 32,
-      iterations: this.iterations,
-    }).toString(CryptoJS.enc.Base64);
-  
-    return `${salt.toString(CryptoJS.enc.Base64)}:${hash}`;
+  encryptPassword = async (password: string): Promise<string> => {
+    // Hash the password with bcrypt
+    const hash = await bcrypt.hash(password, this.saltRounds);
+    return hash;
   };
 
-  comparePasswords = (savedHash: string, password: string): boolean => {
-    // Extract the salt and hash from the saved hash
-    const [savedSalt, savedHashWithoutSalt] = savedHash.split(':');
-    const salt = CryptoJS.enc.Base64.parse(savedSalt);
-  
-    // Hash the entered password with the same salt and iterations
-    const hash = CryptoJS.PBKDF2(password, salt, {
-      keySize: 512 / 32,
-      iterations: this.iterations,
-    }).toString(CryptoJS.enc.Base64);
-  
-    // Compare the hashes
-    return hash === savedHashWithoutSalt;
+  comparePasswords = async (savedHash: string, password: string): Promise<boolean> => {
+    // Compare the entered password with the saved hash using bcrypt
+    const match = await bcrypt.compare(password, savedHash);
+    return match;
   };
 }
 

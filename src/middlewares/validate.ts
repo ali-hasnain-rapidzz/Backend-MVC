@@ -47,11 +47,7 @@ export const applyValidators =
     const selectedOption = req.body[data.keyToCheck];
     const validators = data.options.find((opt) => opt.check === selectedOption)?.validators || [];
 
-    // validators.forEach((validatorSchema) => {
-    //   validate(validatorSchema);
-    // });
-    // next();
-
+ 
     try {
       for (const validator of validators) {
         await new Promise((resolve, reject) => {

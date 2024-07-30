@@ -1,4 +1,3 @@
-import { MAX_FILE_LIMIT_MB } from "@Constants/constants";
 import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import multer from "multer";
 import multerS3 from "multer-s3";
@@ -25,7 +24,6 @@ export const uploadFile = multer({
       cb(null, fullPath);
     },
   }),
-  limits: { fileSize: MAX_FILE_LIMIT_MB * 1024 * 1024 }, // 20 MB limit
 });
 
 export const deleteFile = async (key: string) => {

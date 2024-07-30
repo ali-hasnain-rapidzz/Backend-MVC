@@ -1,54 +1,42 @@
-import { UserService } from "@Services/user.service";
-import { ApiError } from "@Utils/ApiError";
-import { catchAsync } from "@Utils/catchAsync";
-import { LoginValidationType } from "@Validations/auth.validation";
-import { CreateUserValidationType } from "@Validations/user.validation";
-import httpStatus from "http-status";
+import { User } from '@Models/user.model';
+import { UserService } from '@Services/user.service';
+import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
-/**
- * this function is used to register user
- */
-export const registerUser = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    let {
-      body: reqBody
-    } = req as CreateUserValidationType;
+export const signup = async (req: Request, res: Response) => {
+    const { name, email, password } = req.body;
+    try {
+        const existingUser = await UserService.findUserByEmail(email);
+        if (existingUser) {
+            return res.status(400).json({ error: 'User already exists' });
+        }
 
-    const existingUser = await UserService.getOneUser({ id: reqBody.email });
+        await UserService.createUser({ name, email, password });
+        res.status(200).json({ message: 'User created successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error creating user' });
+    }
+};
 
-    if (existingUser) 
-      throw new ApiError(httpStatus.BAD_REQUEST, "User already exists");
 
-    const newUser = await UserService.createUser({
-      ...reqBody,
-      fullName: reqBody.firstName.trim() + " " + reqBody.lastName.trim(),
-    });
-    return res.status(httpStatus.OK).json({
-      result: newUser,
-    });
-  });
 
-/**
- * this function is used to login user
- */
-  export const login = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-      const { email, password } = req.body as LoginValidationType;
-      const user = (await UserService.getOneUser({ email }).lean());
-  
-      if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, "User does not exists");
-      }
-      let { password: userPassword, ...userWithoutPassword } = user;
-      // compare encrypted password
-      const comparePass = EncryptLibraryClass.comparePasswords(userPassword, password);
-      if (!comparePass) {
-        throw new ApiError(httpStatus.401, "Incorect password");
-      }
-  
-      return res.status(200).json({
-        user,
-      });
-    },
-  );
-  
+
+export const login = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    try {
+        const user = await UserService.findUserByEmail(email);
+        console.log(user);
+        if (user && await UserService.matchPassword(email, password)) {
+            const token = jwt.sign({ email: user.email,name:user.name }, process.env.JWT_SECRET as string, {
+                expiresIn: '1h'
+            });
+            res.status(200).json({ token, user });
+        } else {
+            res.status(400).json({ error: 'Invalid credentials' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error logging in' });
+    }
+};

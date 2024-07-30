@@ -1,43 +1,12 @@
-import authMiddleware from "@Middlewares/auth.middleware";
-import accomplismentRoutes from "@Routes/accomplishment.route";
+import express from 'express';
 import authRoutes from "@Routes/auth.route";
-import coachRoutes from "@Routes/coach.route";
-import connectionRoutes from "@Routes/connection.route";
-import eventRoutes from "@Routes/event.route";
-import filesUploadRoutes from "@Routes/files.route";
-import followUnfollowRoutes from "@Routes/followUnfollow.route";
-import globalSearchRoutes from "@Routes/globalSearch.route";
-import jsonRoutes from "@Routes/json.route";
-import leagueRoutes from "@Routes/league.route";
-import notificationRoutes from "@Routes/notification.route";
-import officialRoutes from "@Routes/official.route";
-import playerRoutes from "@Routes/player.route";
-import postRoutes from "@Routes/post.route";
-import privilegeRoutes from "@Routes/privilege.route";
-import profileRoutes from "@Routes/profile.route";
-import teamRoutes from "@Routes/team.route";
-import userRoutes from "@Routes/user.route";
-import express from "express";
+import userRoutes from "@Routes/user.route"
+
 const router = express.Router();
 
 // routes
 router.use("/auth", authRoutes);
-router.use("/privilege", authMiddleware({ checkProfile: true }), privilegeRoutes);
-router.use("/user", userRoutes);
-router.use("/player", authMiddleware(), playerRoutes);
-router.use("/coach", authMiddleware(), coachRoutes);
-router.use("/official", authMiddleware(), officialRoutes);
-router.use("/notifications", authMiddleware({ checkProfile: true }), notificationRoutes);
-router.use("/team", teamRoutes);
-router.use("/league", leagueRoutes);
-router.use("/social", authMiddleware({ checkProfile: true }), followUnfollowRoutes);
-router.use("/connect", authMiddleware({ checkProfile: true }), connectionRoutes);
-router.use("/post", authMiddleware({ checkProfile: true }), postRoutes);
-router.use("/profile", authMiddleware({ checkProfile: true }), profileRoutes);
-router.use("/accomplishments", authMiddleware({ checkProfile: true }), accomplismentRoutes);
-router.use("/events", authMiddleware({ checkProfile: true }), eventRoutes);
-router.use("/search", authMiddleware({ checkProfile: true }), globalSearchRoutes);
-router.use("/json", jsonRoutes);
-router.use("/files", filesUploadRoutes);
+router.use("/user",userRoutes);
+
 
 export default router;
