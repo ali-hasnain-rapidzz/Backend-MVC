@@ -1,5 +1,6 @@
 import { GenericAggregation } from "@Aggregations/generic.aggregation";
 import { ERROR_MESSAGES } from "@Constants/constants";
+import Sample from "@Decorators/sample.decorator";
 import { EncryptLibrary } from "@Libraries/encrypt.lib";
 import { TokenService } from "@Libraries/token.lib";
 import { User } from "@Models/user.model";
@@ -13,21 +14,24 @@ class UserServiceClass {
     return await User.findOne({ email }).select(allowPassword ? "+password" : "");
   };
 
-  loginUser = async ({
+  @Sample()
+  async loginUser({
     email,
     password,
   }: {
     email: string;
     password: string;
-  }): Promise<{ token: string; user: UserType }> => {
+  }): Promise<{ token: string; user: Omit<UserType, "password"> }> {
     const user = await this.findUserByEmail(email, true);
     if (!user || !(await EncryptLibrary.comparePasswords(password, user.password))) {
       throw new ApiError(httpStatus.BAD_REQUEST, ERROR_MESSAGES.INVALID_USER);
     }
 
     const token = TokenService.generateToken(user.email, user.name);
-    return { token, user };
-  };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: usrPass, ...usertoSend } = user;
+    return { token, user: usertoSend };
+  }
 
   createUser = async ({
     name,
@@ -42,6 +46,7 @@ class UserServiceClass {
     const newUser = new User({ name, email, password: hashedPassword });
     return await newUser.save();
   };
+
   listAllUsers = async (data: { filter?: FilterValidationType; page: number; limit: number }) => {
     const { filter, page, limit } = data;
 
