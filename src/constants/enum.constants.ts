@@ -1,6 +1,3 @@
-
-import { Model } from "mongoose";
-
 export enum PROFILE_ROLES {
   PLAYER = "player",
   OFFICIAL = "official",

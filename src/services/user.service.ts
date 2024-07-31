@@ -1,7 +1,7 @@
 import { GenericAggregation } from "@Aggregations/generic.aggregation";
 import { ERROR_MESSAGES } from "@Constants/constants";
 import { EncryptLibrary } from "@Libraries/encrypt.lib";
-import TokenService from "@Libraries/token.lib";
+import { TokenService } from "@Libraries/token.lib";
 import { User } from "@Models/user.model";
 import { IUser, UserType } from "@Types/user.types";
 import { ApiError } from "@Utils/ApiError";
