@@ -1,9 +1,8 @@
 import "@Config/env_setup";
 
+import app from "@App";
 import { dbConnect } from "@Config/db";
 import { ApiError } from "@Utils/ApiError";
-// eslint-disable-next-line import/no-unresolved
-import app from "./app";
 
 process.on("uncaughtException", (err: ApiError) => {
   console.log("UNCAUGHT EXCEPTION! 💥 Shutting down...");

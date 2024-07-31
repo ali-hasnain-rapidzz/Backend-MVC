@@ -1,24 +1,15 @@
 import { softDeletePlugin } from "@Plugins/softDelete.plugin";
 import { UserType } from "@Types/user.types";
-import { Model, Schema, Types, model } from "mongoose";
+import { Model, Schema, model } from "mongoose";
 
 const userSchema = new Schema<UserType>(
   {
-    fullName: {
+    name: {
       type: String,
       required: true,
       trim: true,
     },
-    firstName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+
     email: {
       type: String,
       required: true,
@@ -26,18 +17,11 @@ const userSchema = new Schema<UserType>(
       unique: true,
       lowercase: true,
     },
-    dob: {
-      type: Date,
-      required: true,
-    },
-    phone: {
+    password: {
       type: String,
-      required: false,
-      default: "",
+      required: true,
+      select: false,
     },
-    isDeleted: { type: Boolean, required: false, default: false },
-    deletedBy: { type: Types.ObjectId, ref: "Users", required: false },
-    deletedAt: { type: Date, required: false },
   },
   {
     versionKey: false,

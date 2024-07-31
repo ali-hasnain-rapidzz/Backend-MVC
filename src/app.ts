@@ -1,11 +1,10 @@
+import routes from "@Routes/router";
+import { ApiError } from "@Utils/ApiError";
+import { globalErrorHandler } from "@Utils/errorHandler";
 import cors from "cors";
 import express from "express";
 import httpStatus from "http-status";
 import morgan from "morgan";
-
-import routes from "@Routes/router";
-import { ApiError } from "@Utils/ApiError";
-import { globalErrorHandler } from "@Utils/errorHandler";
 
 const app = express();
 
@@ -17,8 +16,8 @@ app.use(cors());
 app.use("/api", routes);
 
 app.use("/", (req, res) => {
-  console.log('App is up and running!');
-  res.status(200).json({ message: 'App is up and running!' });
+  console.log("App is up and running!");
+  res.status(200).json({ message: "App is up and running!" });
 });
 
 app.all("*", (req) => {

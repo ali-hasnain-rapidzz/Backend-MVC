@@ -1,4 +1,4 @@
-import { PLAYER_SPORTS, SORT_BY } from "@Constants/enum.constants";
+import { SORT_BY } from "@Constants/enum.constants";
 import { z } from "zod";
 
 // Define schema for reset password
@@ -7,9 +7,7 @@ import { z } from "zod";
 export const baseFilterValidation = z.object({
   sortByKey: z.string(),
   sortOrder: z.nativeEnum(SORT_BY),
-  searchTerm: z.string().optional(),
-  status: z.string().optional(),
-  sport: z.nativeEnum(PLAYER_SPORTS).optional(),
+ 
 });
 
 // Export the optional filter validation schema

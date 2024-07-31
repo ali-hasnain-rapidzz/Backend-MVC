@@ -2,6 +2,7 @@ import mongoose, { connect, disconnect } from "mongoose";
 
 export async function dbConnect(url: string) {
   try {
+   
     mongoose.set("strictQuery", true);
     await connect(url);
     console.log("DB Connected");
