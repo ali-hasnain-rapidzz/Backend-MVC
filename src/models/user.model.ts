@@ -1,9 +1,6 @@
 import { softDeletePlugin } from "@Plugins/softDelete.plugin";
 import { UserType } from "@Types/user.types";
-import { Model, Schema, Types, model } from "mongoose";
-
-
-
+import { Model, Schema, model } from "mongoose";
 
 const userSchema = new Schema<UserType>(
   {
@@ -12,7 +9,7 @@ const userSchema = new Schema<UserType>(
       required: true,
       trim: true,
     },
-   
+
     email: {
       type: String,
       required: true,
@@ -23,9 +20,8 @@ const userSchema = new Schema<UserType>(
     password: {
       type: String,
       required: true,
-     
+      select: false,
     },
-  
   },
   {
     versionKey: false,

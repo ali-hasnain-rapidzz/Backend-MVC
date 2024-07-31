@@ -3,7 +3,11 @@ import { FilterValidationType } from "@Validations/pagination.validation";
 import { PipelineStage } from "mongoose";
 
 class GenericAggregationClass {
-  paginateAndSort = (data: { filter?: FilterValidationType; page: number; limit: number }): PipelineStage[] => {
+  paginateAndSort = (data: {
+    filter?: FilterValidationType;
+    page: number;
+    limit: number;
+  }): PipelineStage[] => {
     const { filter = { sortByKey: "createdAt", sortOrder: SORT_BY.DESC }, page, limit } = data;
     const sortOptions = filter?.sortByKey
       ? { [filter.sortByKey]: filter.sortOrder === SORT_BY.ASC ? 1 : -1 }
@@ -13,10 +17,19 @@ class GenericAggregationClass {
       { $sort: { ...sortOptions } },
       { $skip: (Number(page) - 1) * Number(limit) },
       { $limit: limit },
+      { $project: { password: 0 } },
     ] as PipelineStage[];
   };
 
-  aggregateUsers = ({ page, limit, filter }: { page: number; limit: number; filter?: FilterValidationType }): PipelineStage[] => {
+  countAndPaginate = ({
+    page,
+    limit,
+    filter,
+  }: {
+    page: number;
+    limit: number;
+    filter?: FilterValidationType;
+  }): PipelineStage[] => {
     const paginationStages = this.paginateAndSort({ page, limit, filter });
 
     return [
