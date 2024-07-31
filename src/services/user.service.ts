@@ -52,6 +52,10 @@ class UserServiceClass {
       result: result[0]?.data || [],
     };
   };
+
+  UserCron = async () => {
+    console.log("User Cron Added");
+  };
 }
 
 export const UserService = new UserServiceClass();
