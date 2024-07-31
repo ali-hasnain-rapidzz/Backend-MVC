@@ -21,14 +21,16 @@ class UserServiceClass {
   }: {
     email: string;
     password: string;
-  }): Promise<{ token: string; user: UserType }> {
+  }): Promise<{ token: string; user: Omit<UserType, "password"> }> {
     const user = await this.findUserByEmail(email, true);
     if (!user || !(await EncryptLibrary.comparePasswords(password, user.password))) {
       throw new ApiError(httpStatus.BAD_REQUEST, ERROR_MESSAGES.INVALID_USER);
     }
 
     const token = TokenService.generateToken(user.email, user.name);
-    return { token, user };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: usrPass, ...usertoSend } = user;
+    return { token, user: usertoSend };
   }
 
   createUser = async ({
