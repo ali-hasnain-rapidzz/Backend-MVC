@@ -56,3 +56,22 @@ This command runs ESLint to check for code quality and style issues.
 
 npm install
 npm run start:example
+
+## Customizing Scripts for Different Environments
+
+You can create custom scripts for different environments by modifying the scripts section of your package.json file. Here’s how you can set up scripts for various environments:
+
+## Create a New Script
+
+To create a new script for an environment, add an entry to the scripts section of package.json with a name indicating the environment. Use env-cmd to load the appropriate .env file, and nodemon or node to start the server.
+
+"scripts": {
+"build:start:example": "env-cmd -f ./src/secrets/env/.env.example node ./dist/server.js",
+"start:example": "cross-env ENVIRONMENT=example nodemon --exec ts-node-dev -r tsconfig-paths/register src/server.ts",
+"build:start:dev": "env-cmd -f ./src/secrets/env/.env.dev node ./dist/server.js",
+"start:dev": "cross-env ENVIRONMENT=dev nodemon --exec ts-node-dev -r tsconfig-paths/register src/server.ts"
+}
+
+## Block src/secrets folder in .gitignore file
+
+Remember to block the secrets folder in .gitignore file.
