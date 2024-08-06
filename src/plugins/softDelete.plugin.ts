@@ -21,9 +21,6 @@ const removeReferences = async function (doc: any) {
   // Define the schema paths that contain references to this document
   const pathsToCheck: { model: string; path: string; array?: boolean }[] = [
     { model: "Users", path: "manages" },
-    { model: "Users", path: "profiles.profileId", array: true },
-    { model: "Profiles", path: "teams.teamId", array: true },
-    { model: "Profiles", path: "leagues.leagueId", array: true },
   ];
 
   for (const pathInfo of pathsToCheck) {
@@ -32,18 +29,10 @@ const removeReferences = async function (doc: any) {
 
     if (array) {
       // Handle array fields
-      const field = path.split(".").pop();
-      const arrayFilter: any = {};
-      arrayFilter[`elem.${field}`] = doc._id;
-
-      await refModel.updateMany(
-        { [`${path}`]: doc._id },
-        { $pull: { profiles: { profileId: doc._id } } },
-        { arrayFilters: [{ "elem.profileId": doc._id }] },
-      );
+      await refModel.updateMany({ [path]: doc._id }, { $pull: { [path]: doc._id } });
     } else {
       // Handle non-array fields
-      await refModel.updateMany({ [path]: doc._id }, { $pull: { [path]: doc._id } });
+      await refModel.updateMany({ [path]: doc._id }, { $set: { [path]: null } });
     }
   }
 };

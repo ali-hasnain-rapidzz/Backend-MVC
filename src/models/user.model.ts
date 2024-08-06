@@ -29,15 +29,6 @@ const userSchema = new Schema<UserType>(
   },
 );
 
-userSchema.pre("save", function (next) {
-  if (this.isNew) {
-    this._wasNew = true;
-  } else {
-    this._wasNew = false;
-  }
-  next();
-});
-
 // Plugins
 userSchema.plugin(softDeletePlugin);
 
