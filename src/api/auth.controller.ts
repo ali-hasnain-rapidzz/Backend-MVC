@@ -26,6 +26,5 @@ export const login = catchAsync(async (req: Request, res: Response) => {
   } = req as LoginValidationType;
 
   const { token, user } = await UserService.loginUser({ email, password });
-  console.log("Login Success");
   res.status(200).json({ token, user });
 });

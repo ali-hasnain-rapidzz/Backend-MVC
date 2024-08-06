@@ -131,6 +131,6 @@ dist
 yarn.lock
 .vscode/settings.json
 # secrets
-src/secrets
+# src/secrets
 
 sendGridFunction.ts

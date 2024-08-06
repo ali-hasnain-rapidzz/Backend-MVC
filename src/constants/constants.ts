@@ -5,7 +5,7 @@ export const ERROR_MESSAGES = {
   RECORD_NOT_FOUND: "record does not exist!",
 
   FORBIDDEN: "forbidden access!",
-
+  TOO_MANY_REQUESTS: "Too many requests",
   INVALID_USER: "Invalid user",
   EMAIL_UNVERIFIED: "Email not verified",
   ALREADY_EXISTS: "Already exists",

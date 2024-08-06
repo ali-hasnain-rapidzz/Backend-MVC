@@ -8,7 +8,7 @@ This project is a server API built with TypeScript and Express, supporting multi
 
 To configure different environments, follow these steps:
 
-1. Create an `.env` file in the `src/secrets/env` folder for each environment (e.g., `.env.dev`, `.env.prod`, etc.).
+1. Create an `.env` file in the `src/secrets/env/` folder for each environment (e.g., `.env.dev`, `.env.prod`, etc.).
 2. Copy the contents of the `env.example` file into the new `.env` files and update the values as needed for each environment.
 
 ### Example `.env` Files
@@ -31,21 +31,21 @@ DB_ADDRESS: The address of the MongoDB database.
 
 The following npm commands are available for building, starting, and testing the application:
 
-## Build and Start in Production
+## Start in Production (Development Mode)
 
-npm run build:start:prod
-
-This command uses env-cmd to load the .env.prod file and then starts the server with the built code.
+npm run start:prod
+This command sets the environment to production and starts the server using ts-node-dev for hot-reloading.
 
 ## Build the Project
 
 npm run build
 This command compiles the TypeScript code into JavaScript.
 
-## Start in Production (Development Mode)
+## Build and Start in Production
 
-npm run start:prod
-This command sets the environment to production and starts the server using ts-node-dev for hot-reloading.
+npm run build:start:prod
+
+This command uses env-cmd to load the .env.prod file and then starts the server with the built code.
 
 ## Lint the Code
 
@@ -55,4 +55,4 @@ This command runs ESLint to check for code quality and style issues.
 ## Getting Started
 
 npm install
-npm run build:start:prod
+npm run start:example
