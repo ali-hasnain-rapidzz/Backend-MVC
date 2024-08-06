@@ -30,7 +30,7 @@ class UserServiceClass {
     const token = TokenService.generateToken(user.email, user.name);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: usrPass, ...usertoSend } = user;
-    return { token, user: usertoSend };
+    return { token, user };
   }
 
   createUser = async ({

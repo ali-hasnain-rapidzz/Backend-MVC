@@ -19,15 +19,21 @@ const filterDeletedAfterPopulate = function (result: any) {
 // Utility function to update references
 const removeReferences = async function (doc: any) {
   // Define the schema paths that contain references to this document
-  const pathsToCheck = [
-    // Add your reference paths here
+  const pathsToCheck: { model: string; path: string; array?: boolean }[] = [
     { model: "Users", path: "manages" },
   ];
 
   for (const pathInfo of pathsToCheck) {
-    const { model, path } = pathInfo;
+    const { model, path, array } = pathInfo;
     const refModel = doc.model(model);
-    await refModel.updateMany({ [path]: doc._id }, { $pull: { [path]: doc._id } });
+
+    if (array) {
+      // Handle array fields
+      await refModel.updateMany({ [path]: doc._id }, { $pull: { [path]: doc._id } });
+    } else {
+      // Handle non-array fields
+      await refModel.updateMany({ [path]: doc._id }, { $set: { [path]: null } });
+    }
   }
 };
 

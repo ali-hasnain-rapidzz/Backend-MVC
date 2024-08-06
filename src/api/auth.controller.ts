@@ -25,10 +25,6 @@ export const login = catchAsync(async (req: Request, res: Response) => {
     body: { email, password },
   } = req as LoginValidationType;
 
-  try {
-    const { token, user } = await UserService.loginUser({ email, password });
-    res.status(200).json({ token, user });
-  } catch (error) {
-    throw new ApiError(httpStatus.BAD_REQUEST, ERROR_MESSAGES.INVALID_USER);
-  }
+  const { token, user } = await UserService.loginUser({ email, password });
+  res.status(200).json({ token, user });
 });

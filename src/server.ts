@@ -1,4 +1,5 @@
 import "@Config/env_setup";
+import "@Plugins/global.plugin";
 
 import app from "@App";
 import { dbConnect } from "@Config/db";
