@@ -42,6 +42,17 @@ const softDeletePlugin = function <T>(schema: Schema<T>) {
   schema.pre("countDocuments", excludeDeletedMiddleware);
   schema.pre("aggregate", function (next) {
     this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+    const pipeline = this.pipeline();
+
+    pipeline.forEach((stage: any) => {
+      if (stage.$lookup) {
+        // Adding a match stage to filter out soft-deleted documents
+        stage.$lookup.pipeline = stage.$lookup.pipeline || [];
+        stage.$lookup.pipeline.push({
+          $match: { isDeleted: { $ne: true } },
+        });
+      }
+    });
     next();
   });
 
@@ -77,3 +88,4 @@ const softDeletePlugin = function <T>(schema: Schema<T>) {
 };
 
 export { softDeletePlugin };
+
