@@ -94,4 +94,3 @@ const softDeletePlugin = function <T>(schema: Schema<T>) {
 };
 
 export { softDeletePlugin };
-
