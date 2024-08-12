@@ -36,7 +36,8 @@
       "@Plugins/*": ["plugins/*"],
       "@Decorators/*": ["decorators/*"],
       "@Authentication/*": ["authentication/*"],
-      "@Views/*": ["views/*"]
+      "@Views/*": ["views/*"],
+      "@App": ["./app"]
     }
   },
   "include": ["src/**/*.ts", "src/types/*.d.ts"],

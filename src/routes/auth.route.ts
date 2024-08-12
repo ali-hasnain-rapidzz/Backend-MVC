@@ -1,15 +1,11 @@
-import {
-  login,
-  registerUser
-} from "@Controllers/auth.controller";
+import { login, signup } from "@Controllers/auth.controller";
 import { validate } from "@Middlewares/validate";
-import { loginValidation } from "@Validations/auth.validation";
-import { createUserValidation } from "@Validations/user.validation";
+import { loginValidation, signUpValidation } from "@Validations/auth.validation";
 import { Router } from "express";
 
 const router: Router = Router();
 
-router.route("/register-user").post(validate(createUserValidation), registerUser);
+router.route("/register").post(validate(signUpValidation), signup);
 router.route("/login").post(validate(loginValidation), login);
 
 export default router;
