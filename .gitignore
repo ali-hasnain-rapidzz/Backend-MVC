@@ -120,7 +120,6 @@ dist
 .tern-port
 
 # Stores VSCode versions used for testing VSCode extensions
-.vscode-test
 
 # yarn v2
 .yarn/cache
@@ -129,8 +128,11 @@ dist
 .yarn/install-state.gz
 .pnp.*
 yarn.lock
-.vscode/settings.json
 # secrets
 # src/secrets
 
 sendGridFunction.ts
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore

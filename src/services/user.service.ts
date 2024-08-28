@@ -1,6 +1,6 @@
 import { GenericAggregation } from "@Aggregations/generic.aggregation";
 import { ERROR_MESSAGES } from "@Constants/constants";
-import Sample from "@Decorators/sample.decorator";
+import TryCatch from "@Decorators/tryCatch.decorator";
 import { EncryptLibrary } from "@Libraries/encrypt.lib";
 import { TokenService } from "@Libraries/token.lib";
 import { User } from "@Models/user.model";
@@ -10,11 +10,17 @@ import { FilterValidationType } from "@Validations/pagination.validation";
 import httpStatus from "http-status";
 
 class UserServiceClass {
-  findUserByEmail = async (email: string, allowPassword?: boolean): Promise<UserType | null> => {
-    return await User.findOne({ email }).select(allowPassword ? "+password" : "");
+  @TryCatch()
+  findUserByEmail = async (
+    email: string,
+    allowPassword?: boolean,
+  ): Promise<UserType | null> => {
+    return await User.findOne({ email }).select(
+      allowPassword ? "+password" : "",
+    );
   };
 
-  @Sample()
+  @TryCatch()
   async loginUser({
     email,
     password,
@@ -23,7 +29,10 @@ class UserServiceClass {
     password: string;
   }): Promise<{ token: string; user: Omit<UserType, "password"> }> {
     const user = await this.findUserByEmail(email, true);
-    if (!user || !(await EncryptLibrary.comparePasswords(password, user.password))) {
+    if (
+      !user ||
+      !(await EncryptLibrary.comparePasswords(password, user.password))
+    ) {
       throw new ApiError(httpStatus.BAD_REQUEST, ERROR_MESSAGES.INVALID_USER);
     }
 
@@ -33,6 +42,7 @@ class UserServiceClass {
     return { token, user };
   }
 
+  @TryCatch()
   createUser = async ({
     name,
     email,
@@ -47,17 +57,26 @@ class UserServiceClass {
     return await newUser.save();
   };
 
-  listAllUsers = async (data: { filter?: FilterValidationType; page: number; limit: number }) => {
+  @TryCatch()
+  listAllUsers = async (data: {
+    filter?: FilterValidationType;
+    page: number;
+    limit: number;
+  }) => {
     const { filter, page, limit } = data;
 
-    const aggregation = GenericAggregation.countAndPaginate({ page, limit, filter });
+    const aggregation = GenericAggregation.countAndPaginate({
+      page,
+      limit,
+      filter,
+    });
     const result = await User.aggregate(aggregation);
     return {
       count: result[0]?.totalCount || 0,
       result: result[0]?.data || [],
     };
   };
-
+  @TryCatch()
   UserCron = async () => {
     console.log("User Cron Added");
   };
