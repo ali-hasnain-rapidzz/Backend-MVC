@@ -1,6 +1,6 @@
 import { GenericAggregation } from "@Aggregations/generic.aggregation";
 import { ERROR_MESSAGES } from "@Constants/constants";
-import TryCatch from "@Decorators/tryCatch.decorator";
+import TryCatch from "@Decorators/try_catch.decorator";
 import { EncryptLibrary } from "@Libraries/encrypt.lib";
 import { TokenService } from "@Libraries/token.lib";
 import { User } from "@Models/user.model";
@@ -77,7 +77,7 @@ class UserServiceClass {
     };
   };
   @TryCatch()
-  UserCron = async () => {
+  userCron = async () => {
     console.log("User Cron Added");
   };
 }

@@ -1,5 +1,5 @@
 import { morganMiddleware } from "@Config/morganLogger";
-import rateLimiter from "@Middlewares/rateLimiter";
+import rateLimiter from "@Middlewares/rate_limiter.middleware";
 import routes from "@Routes/router";
 import { ApiError } from "@Utils/ApiError";
 import { globalErrorHandler } from "@Utils/errorHandler";
@@ -23,7 +23,10 @@ app.use("/", (req, res) => {
 });
 
 app.all("*", (req) => {
-  throw new ApiError(httpStatus.NOT_FOUND, `Cannot find ${req.originalUrl} on this server!`);
+  throw new ApiError(
+    httpStatus.NOT_FOUND,
+    `Cannot find ${req.originalUrl} on this server!`,
+  );
 });
 
 app.use(globalErrorHandler);
