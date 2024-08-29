@@ -1,6 +1,9 @@
 import { login, signup } from "@Controllers/auth.controller";
 import { validate } from "@Middlewares/validate";
-import { loginValidation, signUpValidation } from "@Validations/auth.validation";
+import {
+  loginValidation,
+  signUpValidation,
+} from "@Validations/auth.validation";
 import { Router } from "express";
 
 const router: Router = Router();

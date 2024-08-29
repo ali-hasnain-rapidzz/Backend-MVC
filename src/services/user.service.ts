@@ -11,14 +11,17 @@ import httpStatus from "http-status";
 
 class UserServiceClass {
   @TryCatch()
-  findUserByEmail = async (
-    email: string,
-    allowPassword?: boolean,
-  ): Promise<UserType | null> => {
+  async findUserByEmail({
+    email,
+    allowPassword = false,
+  }: {
+    email: string;
+    allowPassword?: boolean;
+  }): Promise<UserType | null> {
     return await User.findOne({ email }).select(
       allowPassword ? "+password" : "",
     );
-  };
+  }
 
   @TryCatch()
   async loginUser({
@@ -28,7 +31,7 @@ class UserServiceClass {
     email: string;
     password: string;
   }): Promise<{ token: string; user: Omit<UserType, "password"> }> {
-    const user = await this.findUserByEmail(email, true);
+    const user = await this.findUserByEmail({ email, allowPassword: true });
     if (
       !user ||
       !(await EncryptLibrary.comparePasswords(password, user.password))
@@ -43,7 +46,7 @@ class UserServiceClass {
   }
 
   @TryCatch()
-  createUser = async ({
+  async createUser({
     name,
     email,
     password,
@@ -51,35 +54,41 @@ class UserServiceClass {
     name: string;
     email: string;
     password: string;
-  }): Promise<IUser> => {
+  }): Promise<IUser> {
+    console.log("IN the service method");
     const hashedPassword = await EncryptLibrary.encryptPassword(password);
     const newUser = new User({ name, email, password: hashedPassword });
     return await newUser.save();
-  };
+  }
 
   @TryCatch()
-  listAllUsers = async (data: {
+  async listAllUsers({
+    filter,
+    page,
+    limit,
+  }: {
     filter?: FilterValidationType;
     page: number;
     limit: number;
-  }) => {
-    const { filter, page, limit } = data;
-
+  }): Promise<{ count: number; result: IUser[] }> {
     const aggregation = GenericAggregation.countAndPaginate({
       page,
       limit,
       filter,
     });
+
     const result = await User.aggregate(aggregation);
+
     return {
       count: result[0]?.totalCount || 0,
       result: result[0]?.data || [],
     };
-  };
+  }
+
   @TryCatch()
-  userCron = async () => {
+  async userCron(): Promise<void> {
     console.log("User Cron Added");
-  };
+  }
 }
 
 export const UserService = new UserServiceClass();
