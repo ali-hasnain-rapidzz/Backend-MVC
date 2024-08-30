@@ -1,6 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "prettier", "validate-filename"],
+  "plugins": ["@typescript-eslint", "prettier", "validate-filename", "json"],
 
   "extends": [
     "eslint:recommended",
@@ -108,7 +108,6 @@
         "**/middlewares/**/*.ts",
         "**/models/**/*.ts",
         "**/plugins/**/*.ts",
-        "**/services/**/*.ts",
         "**/validations/**/*.ts",
         "**/types/**/*.ts"
       ],
@@ -140,6 +139,27 @@
           {
             "selector": "method",
             "format": ["camelCase"]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["**/services/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          // {
+          //   "selector": "variable",
+          //   "format": ["camelCase", "UPPER_CASE"]
+          // },
+
+          {
+            "selector": "function",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "class",
+            "format": ["PascalCase"]
           }
         ]
       }
