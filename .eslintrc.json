@@ -27,6 +27,8 @@
     {
       "files": ["**/*.tsx", "**/*.ts"],
       "rules": {
+        "@typescript-eslint/no-unused-vars ": "off",
+
         "validate-filename/naming-rules": [
           "error",
           {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ERROR_MESSAGES } from "@Constants/constants";
 
 import { ApiError } from "@Utils/ApiError";
