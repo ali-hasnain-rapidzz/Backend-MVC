@@ -1,6 +1,7 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": ["@typescript-eslint", "prettier", "validate-filename", "json"],
+
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -10,6 +11,7 @@
   ],
   "rules": {
     "import/named": 0,
+    "@typescript-eslint/no-unused-vars ": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "prettier/prettier": [
       "error",
@@ -23,9 +25,146 @@
   },
   "overrides": [
     {
+      "files": ["**/*.tsx", "**/*.ts"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars ": "off",
+
+        "validate-filename/naming-rules": [
+          "error",
+          {
+            "rules": [
+              {
+                "case": "snake",
+                "target": "**/components/**",
+                "patterns": "^.*\\.component\\.tsx$"
+              },
+              {
+                "case": "snake",
+                "target": "**/services/**",
+                "patterns": "^.*\\.service\\.ts$"
+              },
+              {
+                "case": "snake",
+                "target": "**/api/**",
+                "patterns": "^.*\\.controller\\.ts$"
+              },
+              {
+                "case": "snake",
+                "target": "**/decorators/**",
+                "patterns": "^.*\\.decorator\\.ts$"
+              },
+              {
+                "case": "snake",
+                "target": "**/endpoints/**",
+                "patterns": "^.*\\.endpoint\\.ts$"
+              },
+              {
+                "case": "snake",
+                "target": "**/handlers/**",
+                "patterns": "^.*\\.handler\\.ts$"
+              },
+              {
+                "case": "snake",
+                "target": "**/libraries/**",
+                "patterns": "^.*\\.lib\\.ts$"
+              },
+              {
+                "case": "snake",
+                "target": "**/middlewares/**",
+                "patterns": "^.*\\.middleware\\.ts$"
+              },
+              {
+                "case": "snake",
+                "target": "**/models/**",
+                "patterns": "^.*\\.model\\.ts$"
+              },
+              {
+                "case": "snake",
+                "target": "**/plugins/**",
+                "patterns": "^.*\\.plugin\\.ts$"
+              },
+              {
+                "case": "snake",
+                "target": "**/validators/**",
+                "patterns": "^.*\\.validator\\.ts$"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
       "files": ["tests/**/*"],
       "rules": {
-        "import/no-unresolved": "off"
+        "no-param-reassign": ["error", { "props": false }]
+      }
+    },
+    {
+      "files": [
+        "**/components/**/*.ts",
+        "**/api/**/*.ts",
+        "**/constants/**/*.ts",
+        "**/decorators/**/*.ts",
+        "**/endpoints/**/*.ts",
+        "**/handlers/**/*.ts",
+        "**/libraries/**/*.ts",
+        "**/middlewares/**/*.ts",
+        "**/models/**/*.ts",
+        "**/plugins/**/*.ts",
+        "**/validations/**/*.ts",
+        "**/types/**/*.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "interface",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": "typeLike",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": "class",
+            "format": ["PascalCase"]
+          },
+          // {
+          //   "selector": "variable",
+          //   "format": ["camelCase", "UPPER_CASE"]
+          // },
+
+          {
+            "selector": "parameter",
+            "format": ["camelCase"]
+          },
+
+          {
+            "selector": "method",
+            "format": ["camelCase"]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["**/services/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          // {
+          //   "selector": "variable",
+          //   "format": ["camelCase", "UPPER_CASE"]
+          // },
+
+          {
+            "selector": "function",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "class",
+            "format": ["PascalCase"]
+          }
+        ]
       }
     }
   ]

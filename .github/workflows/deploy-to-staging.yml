@@ -23,7 +23,7 @@ jobs:
       - name: Deploy to Staging
         run: |
           ssh -i staging_ssh_key.pem ubuntu@52.44.21.137 "export ACCESS_TOKEN=${{ secrets.REPO_ACCESS_TOKEN }}; bash -s" << 'EOF'
-          cd /home/ubuntu/SPN_Project/spn-backend/staging
+          cd <your-project-location>
 
           # Setup GIT_ASKPASS script for secure PAT usage
           export GITHUB_PAT=$ACCESS_TOKEN
@@ -32,7 +32,7 @@ jobs:
           export GIT_ASKPASS=$(pwd)/git-askpass-helper.sh
 
           # Ensure Git uses HTTPS instead of SSH
-          git remote set-url origin https://github.com/rapidzzrepo/spn-backend.git
+          git remote set-url origin <your-github-url>
 
           # Debug: Show the remote URL
           git remote -v
@@ -53,7 +53,7 @@ jobs:
           # npx patch-package
 
           # Update pm2
-          pm2 restart "spn-staging"
+          pm2 restart "your-project-staging"
 
           # Clean up
           rm git-askpass-helper.sh

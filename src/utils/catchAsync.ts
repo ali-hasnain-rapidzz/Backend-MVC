@@ -1,7 +1,15 @@
-import { NextFunction, Request, Response } from "express";
+// catchAsync.ts
+export const catchAsync = <T extends (...args: any[]) => Promise<any>>(
+  fn: T,
+  shouldRethrow: boolean = false,
+) => {
+  return (...args: Parameters<T>): Promise<void> => {
+    return fn(...args).catch((err) => {
+      console.error("Async function failed:", err);
 
-export const catchAsync =
-  (fn: (req: Request, res: Response, next: NextFunction) => void) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch((err) => next(err));
+      if (shouldRethrow) {
+        throw err;
+      }
+    });
   };
+};

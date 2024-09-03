@@ -9,21 +9,21 @@ export const validate =
   <T extends ZodTypeAny | { [key: string]: ZodSchema }>(schema: T) =>
   (req: Request, res: Response, next: NextFunction) => {
     const validSchemaKeys = ["params", "query", "body"];
-    const validSchema = pick(schema, validSchemaKeys as Array<keyof typeof schema>);
+    const validSchema = pick(
+      schema,
+      validSchemaKeys as Array<keyof typeof schema>,
+    );
 
     const object: { [key: string]: any } = pick(
       req,
       Object.keys(validSchema) as Array<keyof Request>,
     );
 
-    // Initialize an empty errors array to collect potential validation errors
     let errors: string[] = [];
 
-    // Iterate over the validSchema to validate each part of the request
     for (const [key, value] of Object.entries(validSchema)) {
       const result = (value as ZodSchema).safeParse(object[key]);
       if (!result.success) {
-        // Map Zod error messages for the current part (params, query, body)
         const partErrors = result.error.issues.map(
           (issue) => `${issue.path.join(".")}: ${issue.message}`,
         );
@@ -31,7 +31,6 @@ export const validate =
       }
     }
 
-    // If there are any accumulated errors, create and pass an ApiError to next
     if (errors.length > 0) {
       console.log({ errors });
 
@@ -43,19 +42,19 @@ export const validate =
   };
 
 export const applyValidators =
-  (data: ApplyValidatorsType) => async (req: Request, res: Response, next: NextFunction) => {
+  (data: ApplyValidatorsType) =>
+  async (req: Request, res: Response, next: NextFunction) => {
     const selectedOption = req.body[data.keyToCheck];
-    const validators = data.options.find((opt) => opt.check === selectedOption)?.validators || [];
+    const validators =
+      data.options.find((opt) => opt.check === selectedOption)?.validators ||
+      [];
 
- 
-    try {
-      for (const validator of validators) {
-        await new Promise((resolve, reject) => {
-          validate(validator)(req, res, (err) => (err ? reject(err) : resolve(null)));
-        });
-      }
-      next();
-    } catch (error) {
-      next(error);
+    for (const validator of validators) {
+      await new Promise((resolve, reject) => {
+        validate(validator)(req, res, (err) =>
+          err ? reject(err) : resolve(null),
+        );
+      });
     }
+    next();
   };
