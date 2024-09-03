@@ -1,20 +1,15 @@
+import { catchAsync } from "@Utils/catchAsync";
 import mongoose, { connect, disconnect } from "mongoose";
 
-export async function dbConnect(url: string) {
-  try {
-    mongoose.set("strictQuery", true);
-    await connect(url);
-    console.log("DB Connected");
-  } catch (error) {
-    console.error(error);
-  }
-}
+const dbConnect = catchAsync(async (url: string) => {
+  mongoose.set("strictQuery", true);
+  await connect(url);
+  console.log("DB Connected");
+});
 
-export async function dbDisconnect() {
-  try {
-    await disconnect();
-    console.log("DB Disconnected");
-  } catch (error) {
-    console.error(error);
-  }
-}
+const dbDisconnect = catchAsync(async () => {
+  await disconnect();
+  console.log("DB Disconnected");
+});
+
+export { dbConnect, dbDisconnect };

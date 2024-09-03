@@ -1,5 +1,5 @@
 import { login, signup } from "@Controllers/auth.controller";
-import { validate } from "@Middlewares/validate";
+import { validate } from "@Middlewares/validate.middleware";
 import {
   loginValidation,
   signUpValidation,

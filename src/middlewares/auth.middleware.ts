@@ -1,18 +1,17 @@
-
 import { ERROR_MESSAGES } from "@Constants/constants";
 
 import { ApiError } from "@Utils/ApiError";
 import { catchAsync } from "@Utils/catchAsync";
 import httpStatus from "http-status";
 
-interface optionsType {
+interface OptionsType {
   checkProfile?: boolean;
   allowSubUser?: boolean;
   allowMainUserId?: boolean;
 }
 
 // Middleware factory function
-const authMiddleware = (options: optionsType = {}) =>
+const authMiddleware = (options: OptionsType = {}) =>
   catchAsync(async (req, res, next) => {
     const authHeader: string | undefined = req.header("Authorization");
 
@@ -24,10 +23,6 @@ const authMiddleware = (options: optionsType = {}) =>
     if (!idToken) {
       throw new ApiError(httpStatus.FORBIDDEN, ERROR_MESSAGES.FORBIDDEN);
     }
-
-  
-
-   
 
     next();
   });
